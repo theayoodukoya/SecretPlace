@@ -4,6 +4,7 @@ import {
   Text,
   ActivityIndicator,
   ViewStyle,
+  TextStyle,
   StyleSheet,
 } from 'react-native';
 import { COLORS, SPACING } from '../../config/theme';
@@ -14,6 +15,7 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost';
   loading?: boolean;
   style?: ViewStyle;
+  textStyle?: TextStyle;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -22,6 +24,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   loading,
   style,
+  textStyle,
 }) => {
   const getBg = () => {
     if (variant === 'primary') return COLORS.primary; // Replaced gold with primary for stronger CTA
@@ -53,7 +56,9 @@ export const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator color={getText()} />
       ) : (
-        <Text style={[styles.buttonText, { color: getText() }]}>{title}</Text>
+        <Text style={[styles.buttonText, { color: getText() }, textStyle]}>
+          {title}
+        </Text>
       )}
     </TouchableOpacity>
   );
