@@ -101,6 +101,7 @@ export type RootStackParamList = {
   // Liturgy Engine
   LiturgyBuilder: { planId?: string }; // if editing
   SanctuaryMode: { planId: string };
+  RhythmSchedule: { planId: string; planTitle: string };
 };
 
 export type MainTabParamList = {

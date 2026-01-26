@@ -4,7 +4,7 @@ import { Screen, AppText, Card } from '@/components/ui';
 import { COLORS, SPACING } from '@/config/theme';
 import { useQuery } from '@tanstack/react-query';
 import { LiturgyService } from '@/services/liturgyService';
-import { Plus, Play, Clock } from 'lucide-react-native';
+import { Plus, Play, Clock, Calendar } from 'lucide-react-native';
 import { format } from 'date-fns';
 
 export const RitualsScreen = ({ navigation }: any) => {
@@ -106,18 +106,33 @@ export const RitualsScreen = ({ navigation }: any) => {
                   </View>
                 </View>
 
-                <View
-                  style={{
-                    backgroundColor: COLORS.surfaceSecondary,
-                    padding: 8,
-                    borderRadius: 20,
-                  }}
-                >
-                  <Play
-                    size={20}
-                    color={COLORS.primary}
-                    fill={COLORS.primary}
-                  />
+                <View style={{ alignItems: 'flex-end' }}>
+                  <View
+                    style={{
+                      backgroundColor: COLORS.surfaceSecondary,
+                      padding: 8,
+                      borderRadius: 20,
+                      marginBottom: SPACING.s,
+                    }}
+                  >
+                    <Play
+                      size={20}
+                      color={COLORS.primary}
+                      fill={COLORS.primary}
+                    />
+                  </View>
+
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('RhythmSchedule', {
+                        planId: item.id,
+                        planTitle: item.title,
+                      })
+                    }
+                    style={{ padding: 4 }}
+                  >
+                    <Calendar size={20} color={COLORS.textTertiary} />
+                  </TouchableOpacity>
                 </View>
               </View>
             </Card>

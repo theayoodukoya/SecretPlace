@@ -10,6 +10,7 @@ import { SmartPrayerAssistant } from '../features/prayer/screens/SmartPrayerAssi
 import { RitualsScreen } from '../features/prayer/screens/RitualsScreen';
 import { LiturgyBuilderScreen } from '../features/prayer/screens/LiturgyBuilderScreen';
 import { SanctuaryModeScreen } from '../features/prayer/screens/SanctuaryModeScreen';
+import { RhythmScheduleScreen } from '../features/prayer/screens/RhythmScheduleScreen';
 import { View, ActivityIndicator } from 'react-native';
 import { COLORS } from '../config/theme';
 
@@ -67,6 +68,11 @@ export const RootNavigator = () => {
               name='SanctuaryMode'
               component={SanctuaryModeScreen}
               options={{ presentation: 'fullScreenModal', headerShown: false }}
+            />
+            <Stack.Screen
+              name='RhythmSchedule'
+              component={RhythmScheduleScreen}
+              options={{ presentation: 'modal' }}
             />
           </>
         ) : (

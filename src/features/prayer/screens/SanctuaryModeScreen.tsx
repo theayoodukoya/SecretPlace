@@ -4,6 +4,7 @@ import { Screen, AppText, Button } from '@/components/ui';
 import { COLORS, SPACING } from '@/config/theme';
 import { usePrayerFlowStore } from '@/store/prayerFlowStore';
 import { LiturgyService } from '@/services/liturgyService';
+import { SoundService } from '@/services/soundService';
 import { X, Play, Pause, ChevronRight, ChevronLeft } from 'lucide-react-native';
 import { useQuery } from '@tanstack/react-query';
 
@@ -32,6 +33,7 @@ export const SanctuaryModeScreen = ({ navigation, route }: any) => {
       const steps = await LiturgyService.getPlanSteps(planId);
       if (plan && steps) {
         startFlow(plan, steps);
+        SoundService.loadAmbient();
       }
       return { plan, steps };
     },
@@ -50,6 +52,19 @@ export const SanctuaryModeScreen = ({ navigation, route }: any) => {
     }
     return () => clearInterval(interval);
   }, [isPaused, remainingSeconds]);
+
+  // Audio Integration
+  useEffect(() => {
+    return () => {
+      SoundService.stopAll();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activeSteps.length > 0) {
+      SoundService.playChime();
+    }
+  }, [currentStepIndex]);
 
   const currentStep = activeSteps[currentStepIndex];
 

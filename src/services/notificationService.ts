@@ -1,5 +1,4 @@
 import * as Notifications from 'expo-notifications';
-import { supabase } from '@/database/client';
 import { Platform } from 'react-native';
 
 Notifications.setNotificationHandler({
@@ -11,7 +10,9 @@ Notifications.setNotificationHandler({
 });
 
 export const NotificationService = {
-  async requestPermissions() {
+  async registerForPushNotificationsAsync() {
+    let token;
+
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -21,7 +22,21 @@ export const NotificationService = {
       finalStatus = status;
     }
 
-    return finalStatus === 'granted';
+    if (finalStatus !== 'granted') {
+      return null;
+    }
+
+    // On Android, we need to specify a channel
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    return true;
   },
 
   async scheduleNotification(
@@ -29,41 +44,38 @@ export const NotificationService = {
     body: string,
     hour: number,
     minute: number,
+    weekday?: number, // 1-7 (Sun-Sat)
   ) {
-    if (Platform.OS === 'web') return;
+    const trigger: Notifications.NotificationTriggerInput = weekday
+      ? {
+          hour,
+          minute,
+          weekday, // 1 = Sunday in Expo
+          repeats: true,
+        }
+      : {
+          hour,
+          minute,
+          repeats: true, // Daily if no weekday specified
+        };
 
-    // Cancel existing similar notifications logic would go here
-    // For MVP just standard schedule
-
-    await Notifications.scheduleNotificationAsync({
+    const id = await Notifications.scheduleNotificationAsync({
       content: {
         title,
         body,
         sound: true,
       },
-      trigger: {
-        hour,
-        minute,
-        repeats: true,
-      },
+      trigger,
     });
+
+    return id;
   },
 
-  async clearAll() {
+  async cancelNotification(identifier: string) {
+    await Notifications.cancelScheduledNotificationAsync(identifier);
+  },
+
+  async cancelAll() {
     await Notifications.cancelAllScheduledNotificationsAsync();
-  },
-
-  async saveSettings(settings: any) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { error } = await supabase.from('reminder_settings').upsert({
-      user_id: user.id,
-      ...settings,
-    });
-
-    if (error) console.error(error);
   },
 };

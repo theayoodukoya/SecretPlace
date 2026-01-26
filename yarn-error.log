@@ -1,0 +1,68 @@
+Arguments: 
+  /Users/ayodejiodukoya/.nvm/versions/node/v22.21.1/bin/node /Users/ayodejiodukoya/.yarn/bin/yarn.js add @react-native-community/datetimepicker --cache-folder /tmp/.yarn-cache
+
+PATH: 
+  /Users/ayodejiodukoya/.deno/bin:/Users/ayodejiodukoya/.antigravity/antigravity/bin:/Users/ayodejiodukoya/.yarn/bin:/Users/ayodejiodukoya/.config/yarn/global/node_modules/.bin:/Users/ayodejiodukoya/.nvm/versions/node/v22.21.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pmk/env/global/bin:/Library/Apple/usr/bin:/Users/ayodejiodukoya/.local/bin:/Users/ayodejiodukoya/.deno/bin:/Users/ayodejiodukoya/.antigravity/antigravity/bin:/Users/ayodejiodukoya/.yarn/bin:/Users/ayodejiodukoya/.config/yarn/global/node_modules/.bin:/Users/ayodejiodukoya/.nvm/versions/node/v22.21.1/bin:/Users/ayodejiodukoya/.cargo/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  22.21.1
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: EPERM: operation not permitted, lstat '/Users/ayodejiodukoya/Desktop/projects/personal-projects/SecretPlace/node_modules/hermes-profile-transformer/src/.DS_Store'
+
+npm manifest: 
+  {
+    "name": "secret-place",
+    "version": "1.0.0",
+    "main": "node_modules/expo/AppEntry.js",
+    "scripts": {
+      "start": "expo start",
+      "android": "expo start --android",
+      "ios": "expo start --ios",
+      "web": "expo start --web"
+    },
+    "dependencies": {
+      "@react-native-async-storage/async-storage": "^2.2.0",
+      "@react-navigation/bottom-tabs": "^6.5.11",
+      "@react-navigation/native": "^6.1.9",
+      "@react-navigation/native-stack": "^6.9.17",
+      "@supabase/supabase-js": "^2.39.3",
+      "@tanstack/react-query": "^5.17.19",
+      "date-fns": "^3.3.1",
+      "expo": "~50.0.6",
+      "expo-blur": "~12.9.2",
+      "expo-constants": "~15.4.5",
+      "expo-haptics": "~12.8.1",
+      "expo-linking": "~6.2.2",
+      "expo-notifications": "~0.27.6",
+      "expo-secure-store": "~12.8.1",
+      "expo-status-bar": "~1.11.1",
+      "lucide-react-native": "^0.321.0",
+      "react": "18.2.0",
+      "react-native": "^0.73.6",
+      "react-native-safe-area-context": "4.8.2",
+      "react-native-screens": "~3.29.0",
+      "react-native-svg": "14.1.0",
+      "react-native-url-polyfill": "^2.0.0",
+      "zod": "^3.22.4",
+      "zustand": "^4.5.0"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.20.0",
+      "@types/react": "~18.2.45",
+      "typescript": "^5.1.3"
+    },
+    "private": true
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
