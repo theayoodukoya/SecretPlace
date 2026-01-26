@@ -7,6 +7,9 @@ import { TabNavigator } from './TabNavigator';
 import { PrayerFlowScreen } from '../features/prayer/screens/PrayerFlowScreen';
 import { CreateJournalEntryScreen } from '../features/journal/screens/CreateJournalEntryScreen';
 import { SmartPrayerAssistant } from '../features/prayer/screens/SmartPrayerAssistant';
+import { RitualsScreen } from '../features/prayer/screens/RitualsScreen';
+import { LiturgyBuilderScreen } from '../features/prayer/screens/LiturgyBuilderScreen';
+import { SanctuaryModeScreen } from '../features/prayer/screens/SanctuaryModeScreen';
 import { View, ActivityIndicator } from 'react-native';
 import { COLORS } from '../config/theme';
 
@@ -53,6 +56,17 @@ export const RootNavigator = () => {
             <Stack.Screen
               name='SmartPrayerAssistant'
               component={SmartPrayerAssistant}
+            />
+            <Stack.Screen name='Rituals' component={RitualsScreen} />
+            <Stack.Screen
+              name='LiturgyBuilder'
+              component={LiturgyBuilderScreen}
+              options={{ presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name='SanctuaryMode'
+              component={SanctuaryModeScreen}
+              options={{ presentation: 'fullScreenModal', headerShown: false }}
             />
           </>
         ) : (

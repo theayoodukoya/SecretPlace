@@ -83,6 +83,34 @@ export const HomeScreen = ({ navigation }: any) => {
             textStyle={{ color: COLORS.primary }}
           />
         </Card>
+
+        <View
+          style={{ flexDirection: 'row', gap: SPACING.m, marginTop: SPACING.m }}
+        >
+          <Card
+            style={{ flex: 1 }}
+            onPress={() => navigation.navigate('Rituals')}
+          >
+            <AppText variant='h3' style={{ marginBottom: SPACING.xs }}>
+              My Rituals
+            </AppText>
+            <AppText variant='caption' color={COLORS.textSecondary}>
+              Custom flows
+            </AppText>
+          </Card>
+
+          <Card
+            style={{ flex: 1 }}
+            onPress={() => navigation.navigate('SmartPrayerAssistant')}
+          >
+            <AppText variant='h3' style={{ marginBottom: SPACING.xs }}>
+              Assistant
+            </AppText>
+            <AppText variant='caption' color={COLORS.textSecondary}>
+              AI Helper
+            </AppText>
+          </Card>
+        </View>
       </ScrollView>
     </Screen>
   );

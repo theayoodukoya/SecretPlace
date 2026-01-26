@@ -1,2 +1,31 @@
-node_modules
+# General
+node_modules/
 .env
+.env*.local
+.DS_Store
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# iOS
+ios/Pods/
+ios/build/
+ios/*.xcworkspace
+ios/Podfile.lock
+
+# Android
+android/app/build/
+android/app/src/main/assets/
+android/.gradle/
+android/build/
+
+# Supabase
+supabase/.temp/
+supabase/functions/**/.env
+
+# Editor
+.vscode/
+.idea/
+*.swp
