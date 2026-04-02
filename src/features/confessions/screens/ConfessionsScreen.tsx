@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { Screen, AppText, Card } from '@/components/ui';
 import { PrayerService } from '@/services/prayerService';
@@ -12,11 +12,32 @@ export const ConfessionsScreen = () => {
     queryFn: PrayerService.getGlobalConfessions,
   });
 
-  // Local state for "Tap to speak" tracking in this session
   const [spoken, setSpoken] = useState<Record<string, boolean>>({});
 
-  const toggleSpoken = (id: string) => {
-    setSpoken((prev) => ({ ...prev, [id]: !prev[id] }));
+  // Load today's confession logs on mount
+  useEffect(() => {
+    const loadLogs = async () => {
+      try {
+        const logged = await PrayerService.getConfessionLogs(new Date());
+        const map: Record<string, boolean> = {};
+        logged.forEach((id) => {
+          map[id] = true;
+        });
+        setSpoken(map);
+      } catch (err) {
+        console.error('Failed to load confession logs', err);
+      }
+    };
+    loadLogs();
+  }, []);
+
+  const toggleSpoken = async (id: string) => {
+    const newVal = !spoken[id];
+    setSpoken((prev) => ({ ...prev, [id]: newVal }));
+
+    if (newVal) {
+      await PrayerService.logConfession(id);
+    }
   };
 
   return (

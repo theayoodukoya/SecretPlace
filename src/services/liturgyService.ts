@@ -1,5 +1,5 @@
 import { supabase } from '@/database/client';
-import { PrayerPlan, PrayerStep } from '@/types';
+import { PrayerPlan, PrayerStep, UserSchedule } from '@/types';
 
 export const LiturgyService = {
   async getMyPlans() {
@@ -71,5 +71,53 @@ export const LiturgyService = {
     if (stepsError) throw stepsError;
 
     return plan;
+  },
+
+  async saveSchedule(
+    planId: string,
+    daysOfWeek: number[],
+    timeOfDay: string,
+    reminderEnabled: boolean,
+  ) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
+    const { data, error } = await supabase
+      .from('user_schedules')
+      .upsert(
+        {
+          user_id: user.id,
+          plan_id: planId,
+          days_of_week: daysOfWeek,
+          time_of_day: timeOfDay,
+          reminder_minutes_before: reminderEnabled ? [15] : [],
+          is_active: true,
+        },
+        { onConflict: 'user_id,plan_id' },
+      )
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as UserSchedule;
+  },
+
+  async getSchedule(planId: string) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    const { data, error } = await supabase
+      .from('user_schedules')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('plan_id', planId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data as UserSchedule | null;
   },
 };

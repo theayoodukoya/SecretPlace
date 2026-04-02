@@ -117,6 +117,62 @@ alter table reminder_settings enable row level security;
 create policy "Users can CRUD own reminder settings" on reminder_settings for all using (auth.uid() = user_id);
 
 
+-- 8. PRAYER PLANS (Liturgy Engine)
+create table prayer_plans (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references auth.users not null,
+  title text not null,
+  description text,
+  is_public boolean default false,
+  duration_minutes integer,
+  created_at timestamptz default now()
+);
+
+alter table prayer_plans enable row level security;
+create policy "Users can CRUD own plans" on prayer_plans for all using (auth.uid() = user_id);
+create policy "Public plans viewable by all" on prayer_plans for select using (is_public = true);
+
+-- 9. PRAYER STEPS
+create table prayer_steps (
+  id uuid default uuid_generate_v4() primary key,
+  plan_id uuid references prayer_plans on delete cascade not null,
+  order_index integer not null,
+  title text not null,
+  subtitle text,
+  body text,
+  scripture_ref text,
+  duration_seconds integer,
+  type text check (type in ('text', 'scripture', 'silence', 'song')) default 'text',
+  media_url text,
+  created_at timestamptz default now()
+);
+
+alter table prayer_steps enable row level security;
+create policy "Steps viewable if plan is accessible" on prayer_steps for select using (
+  exists (select 1 from prayer_plans where prayer_plans.id = prayer_steps.plan_id and (prayer_plans.user_id = auth.uid() or prayer_plans.is_public = true))
+);
+create policy "Users can CRUD own plan steps" on prayer_steps for all using (
+  exists (select 1 from prayer_plans where prayer_plans.id = prayer_steps.plan_id and prayer_plans.user_id = auth.uid())
+);
+
+-- 10. USER SCHEDULES
+create table user_schedules (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references auth.users not null,
+  plan_id uuid references prayer_plans on delete cascade,
+  days_of_week integer[],
+  time_of_day time not null default '07:00:00',
+  season_start date,
+  season_end date,
+  reminder_minutes_before integer[] default '{}',
+  is_active boolean default true,
+  created_at timestamptz default now(),
+  unique(user_id, plan_id)
+);
+
+alter table user_schedules enable row level security;
+create policy "Users can CRUD own schedules" on user_schedules for all using (auth.uid() = user_id);
+
 -- SEED DATA
 -- 1. Global Confessions
 insert into confessions (text) values 

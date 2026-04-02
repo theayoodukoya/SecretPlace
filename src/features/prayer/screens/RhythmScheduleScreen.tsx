@@ -22,6 +22,28 @@ export const RhythmScheduleScreen = ({ navigation, route }: any) => {
 
   const queryClient = useQueryClient();
 
+  // Load existing schedule on mount
+  useEffect(() => {
+    const loadSchedule = async () => {
+      try {
+        const existing = await LiturgyService.getSchedule(planId);
+        if (existing) {
+          setSelectedDays(existing.days_of_week || []);
+          if (existing.time_of_day) {
+            const [h, m] = existing.time_of_day.split(':').map(Number);
+            const d = new Date();
+            d.setHours(h, m, 0, 0);
+            setTime(d);
+          }
+          setReminderEnabled(existing.is_active && (existing.reminder_minutes_before?.length ?? 0) > 0);
+        }
+      } catch (err) {
+        console.error('Failed to load schedule', err);
+      }
+    };
+    loadSchedule();
+  }, [planId]);
+
   const toggleDay = (index: number) => {
     if (selectedDays.includes(index)) {
       setSelectedDays(selectedDays.filter((d) => d !== index));
@@ -54,11 +76,24 @@ export const RhythmScheduleScreen = ({ navigation, route }: any) => {
 
   const handleSave = async () => {
     setLoading(true);
-    // TODO: Save to DB via LiturgyService (UserSchedules)
-    // For MVP, we will just schedule local notifications directly
 
-    // Cancel any existing notifications for this plan (needs ID tracking in future)
+    // Persist schedule to database
+    const hours = time.getHours().toString().padStart(2, '0');
+    const mins = time.getMinutes().toString().padStart(2, '0');
+    const timeOfDay = `${hours}:${mins}:00`;
 
+    try {
+      await LiturgyService.saveSchedule(
+        planId,
+        selectedDays,
+        timeOfDay,
+        reminderEnabled,
+      );
+    } catch (err) {
+      console.error('Failed to save schedule', err);
+    }
+
+    // Schedule local notifications
     if (reminderEnabled) {
       const h = time.getHours();
       const m = time.getMinutes();

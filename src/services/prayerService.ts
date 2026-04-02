@@ -46,6 +46,43 @@ export const PrayerService = {
     if (error) console.error('Error marking complete', error);
   },
 
+  async logConfession(confessionId: string) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const date = new Date().toISOString().split('T')[0];
+
+    const { error } = await supabase.from('confession_logs').upsert(
+      {
+        user_id: user.id,
+        date,
+        confession_id: confessionId,
+        completed_at: new Date().toISOString(),
+      },
+      { onConflict: 'user_id,date,confession_id' },
+    );
+
+    if (error) console.error('Error logging confession', error);
+  },
+
+  async getConfessionLogs(date: Date) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const formattedDate = date.toISOString().split('T')[0];
+    const { data } = await supabase
+      .from('confession_logs')
+      .select('confession_id')
+      .eq('user_id', user.id)
+      .eq('date', formattedDate);
+
+    return data?.map((d) => d.confession_id) || [];
+  },
+
   async getCompletions(date: Date) {
     const {
       data: { user },

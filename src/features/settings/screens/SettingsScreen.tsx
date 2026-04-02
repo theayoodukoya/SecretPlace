@@ -14,7 +14,7 @@ export const SettingsScreen = ({ navigation }: any) => {
   const toggleMorning = async (val: boolean) => {
     setMorning(val);
     if (val) {
-      const granted = await NotificationService.requestPermissions();
+      const granted = await NotificationService.registerForPushNotificationsAsync();
       if (granted) {
         await NotificationService.scheduleNotification(
           'Good Morning',
@@ -28,6 +28,29 @@ export const SettingsScreen = ({ navigation }: any) => {
           'Please enable notifications in settings',
         );
         setMorning(false);
+      }
+    } else {
+      // Cancel morning notifications handled by system; no specific ID tracking yet
+    }
+  };
+
+  const toggleEvening = async (val: boolean) => {
+    setEvening(val);
+    if (val) {
+      const granted = await NotificationService.registerForPushNotificationsAsync();
+      if (granted) {
+        await NotificationService.scheduleNotification(
+          'Evening Prayer',
+          'Wind down with God tonight.',
+          21,
+          0,
+        );
+      } else {
+        Alert.alert(
+          'Permission required',
+          'Please enable notifications in settings',
+        );
+        setEvening(false);
       }
     }
   };
@@ -109,7 +132,7 @@ export const SettingsScreen = ({ navigation }: any) => {
             </View>
             <Switch
               value={evening}
-              onValueChange={setEvening}
+              onValueChange={toggleEvening}
               trackColor={{ false: COLORS.border, true: COLORS.primary }}
             />
           </View>
